@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Keep Web App
 
-## Getting Started
+**Keep Web App** is a small yet highly professional project built with **React (Next.js 13+)**, designed to showcase advanced frontend architecture, best practices, and full-stack integration skills.
 
-First, run the development server:
+While this is a compact project, it demonstrates expertise in areas that matter in real-world, scalable applications:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Key Highlights
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Modern Architecture** – Clean separation of concerns with modularized **providers**, **services**, and **hooks** for maintainability and scalability.  
+- **Context API Usage** – Professional usage of React Context for **theme**, **authentication**, and **role-based access control (RBAC)**, enabling secure and reusable state management.  
+- **Security Considerations** – JWT authentication, RBAC, and token handling are implemented to illustrate **secure frontend practices**.  
+- **Scalable Design** – The project structure supports feature expansion without breaking existing functionality, demonstrating **readable and maintainable code**.  
+- **Professional Code Quality** – Emphasis on **code readability**, **consistent patterns**, and **type safety** (TypeScript) to reflect real-world software development standards.  
+- **UI & UX** – Theme support, responsive layout, and clear UI structure to showcase frontend craftsmanship.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Purpose
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project is **not a full production app**, but a **professional showcase** of:
 
-## Learn More
+- Building structured React applications with modern patterns  
+- Implementing authentication and authorization with JWT & RBAC  
+- Writing maintainable, readable, and scalable frontend code  
+- Professional use of hooks, context, and TypeScript  
 
-To learn more about Next.js, take a look at the following resources:
+It demonstrates the type of architecture and code quality I can deliver in **real-world projects**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Feel free to explore the code and structure — this project serves as a **portfolio example for React, TypeScript, and advanced frontend patterns**.
