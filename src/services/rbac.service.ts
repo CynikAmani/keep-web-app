@@ -9,11 +9,13 @@ export interface RBACPayload {
 }
 
 export class RBACService {
-  // -----------------------
-  // Private helpers
-  // -----------------------
+  /*
+  -----------------------
+  | Private helpers
+  -----------------------
+  */ 
   private static getPayload(): RBACPayload | null {
-    const token = getStoredToken();
+    const token = getStoredToken()
     if (!token) return null;
 
     try {

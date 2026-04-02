@@ -1,0 +1,115 @@
+@layer components {
+
+  /* ======================================================
+     ROOT SURFACES
+  ====================================================== */
+
+  .ui-surface-app {
+    min-height: 100vh !important;
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.5rem;
+    font-family: var(--font-geist-sans), sans-serif;
+  }
+
+  /* ======================================================
+     TYPOGRAPHY
+  ====================================================== */
+
+  .ui-heading-hero {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .ui-heading-lg {
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  .ui-body-lg {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .ui-body-sm {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* ======================================================
+     TEXT COLORS
+  ====================================================== */
+
+  .ui-text-primary {
+    color: var(--text-primary) !important;
+  }
+
+  .ui-text-secondary {
+    color: var(--text-secondary) !important;
+  }
+
+  /* ======================================================
+     BUTTONS
+  ====================================================== */
+
+  .ui-btn-primary {
+    background: var(--text-primary) !important;
+    color: var(--bg-primary) !important;
+    padding: 0.875rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .ui-btn-primary:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  .ui-btn-secondary {
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border-primary) !important;
+    padding: 0.875rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .ui-btn-secondary:hover {
+    background: var(--bg-tertiary) !important;
+  }
+
+  /* ======================================================
+     NAVBAR
+  ====================================================== */
+
+  .ui-navbar {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+  }
+
+  .ui-navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .ui-navbar-items {
+    display: flex;
+    gap: 1rem;
+  }
+
+}
