@@ -88,21 +88,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
 
-  /*
-  -------------------------------------------------------------------------
-  | Memoized context value
-  -------------------------------------------------------------------------
-  */
-  const value = useMemo(() => ({
-    user,
-    isAuthenticated: !!user,
-    isLoading,
-    login
-  }), [user, isLoading])
-
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login }}>
       {children}
     </AuthContext.Provider>
   )
