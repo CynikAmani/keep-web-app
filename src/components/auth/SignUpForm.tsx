@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/auth/useAuth"
 import { useAuthModal } from "@/hooks/auth/useAuthModal"
 import { Label } from "@/components/ui/label"
 import { 
@@ -12,11 +14,15 @@ import {
 } from "@/config/uiClasses"
 
 export function SignUpForm() {
+  const router = useRouter()
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  
+  const { signup } = useAuth()
   const { closeModal, openModal } = useAuthModal()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,16 +41,20 @@ export function SignUpForm() {
 
     setIsLoading(true)
     
-    // TODO: Add signup logic here when available
     try {
-      // await signup(email, password)
-      console.log("Sign up:", { email, password })
-      setTimeout(() => {
-        setIsLoading(false)
-        closeModal()
-      }, 1000)
+      await signup({ 
+        name, 
+        email, 
+        password, 
+        password_confirmation: confirmPassword 
+      })
+
+      closeModal()
+      router.push("/dashboard")
+      router.refresh()
     } catch (err: any) {
       setError(err.message || "Failed to create account")
+    } finally {
       setIsLoading(false)
     }
   }
@@ -56,6 +66,20 @@ export function SignUpForm() {
           {error}
         </div>
       )}
+
+      <div className="space-y-2">
+        <Label htmlFor="name">Name</Label>
+        <input
+          id="name"
+          type="text"
+          placeholder="John Doe"
+          className={input}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          disabled={isLoading}
+        />
+      </div>
 
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
@@ -100,7 +124,7 @@ export function SignUpForm() {
 
       <button
         type="submit"
-        className={btnBrandMd}
+        className={`${btnBrandMd} w-full`}
         disabled={isLoading}
       >
         {isLoading ? "Creating account..." : "Sign Up"}

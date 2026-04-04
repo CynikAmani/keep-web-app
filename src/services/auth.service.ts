@@ -1,64 +1,53 @@
-import api from "@/lib/axios"
-import { setStoredToken, getStoredToken } from "@/lib/axios"
-
-export interface User {
-  id: number
-  name: string
-  email: string
-}
-
-interface LoginPayload {
-  email: string
-  password: string
-}
-
-interface LoginResponse {
-  token: string
-  user: User
-}
-
+import api from "@/lib/axios";
+import { useAuthStore } from "@/store/auth.store";
+import { User, SigninPayload, SignupPayload, AuthResponse } from "@/types/auth.types";
 
 export class AuthService {
-
-  /*
-  -------------------------------------------------------------------------
-  | Login
-  -------------------------------------------------------------------------
-  */
-  async login(payload: LoginPayload): Promise<User> {
-
+  async signin(payload: SigninPayload): Promise<User> {
     try {
-      const res = await api.post<LoginResponse>("/auth/login", payload)
-      setStoredToken(res.data.token)
-      return res.data.user
-
+      const res = await api.post<AuthResponse>("/auth/signin", payload);
+      useAuthStore.getState().setAuth({
+        user: res.data.user,
+        token: res.data.token,
+        roles: res.data.roles,
+        permissions: res.data.permissions,
+      });
+      return res.data.user;
     } catch (error: any) {
-      if (error.response) throw new Error(error.response.data?.message || "Authentication failed")
-      throw new Error("Network error. Please try again.")
+      if (error.response) {
+        throw new Error(error.response.data?.message || "Authentication failed");
+      }
+      throw new Error("Network error. Please try again.");
     }
   }
 
-
-  /*
-  -------------------------------------------------------------------------
-  | Get current authenticated user
-  -------------------------------------------------------------------------
-  */
-  async me(): Promise<User> {
-
-    const token = getStoredToken()
-    if (!token) throw new Error("No token")
-
+  async signup(payload: SignupPayload): Promise<User> {
     try {
-      const res = await api.get<User>("/auth/me")
-      return res.data
-
+      const res = await api.post<AuthResponse>("/auth/signup", payload);
+      useAuthStore.getState().setAuth({
+        user: res.data.user,
+        token: res.data.token,
+        roles: res.data.roles,
+        permissions: res.data.permissions,
+      });
+      return res.data.user;
     } catch (error: any) {
-      if (error.response) throw new Error(error.response.data?.message || "Failed to retrieve user")
-      throw new Error("Network error. Please try again.")
+      if (error.response) {
+        throw new Error(error.response.data?.message || "Registration failed");
+      }
+      throw new Error("Network error. Please try again.");
+    }
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await api.post("/auth/logout");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      useAuthStore.getState().clearAuth();
     }
   }
 }
 
-
-export const authService = new AuthService()
+export const authService = new AuthService();

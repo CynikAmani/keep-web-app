@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { useAuth } from "@/providers/AuthProvider"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/auth/useAuth"
 import { useAuthModal } from "@/hooks/auth/useAuthModal"
 import { Label } from "@/components/ui/label"
 import { 
@@ -13,13 +14,14 @@ import {
 } from "@/config/uiClasses"
 
 export function SignInForm() {
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   
-  const { login } = useAuth()
-  const { closeModal, openModal } = useAuthModal()
+  const { signin } = useAuth()
+  const { openModal, closeModal } = useAuthModal()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,10 +29,13 @@ export function SignInForm() {
     setIsLoading(true)
 
     try {
-      await login(email, password)
+      await signin({ email, password })
       closeModal()
+      
       setEmail("")
-      setPassword("")
+      setPassword("") 
+      router.push("/dashboard")
+      router.refresh()
     } catch (err: any) {
       setError(err.message || "Failed to sign in. Please check your credentials.")
     } finally {
@@ -75,7 +80,7 @@ export function SignInForm() {
 
       <button
         type="submit"
-        className={btnBrandMd}
+        className={`${btnBrandMd} w-full`}
         disabled={isLoading}
       >
         {isLoading ? "Signing in..." : "Sign In"}
@@ -85,7 +90,7 @@ export function SignInForm() {
         Don't have an account?{" "}
         <button
           type="button"
-          onClick={() => openModal("signup")}
+          onClick={() => openModal("signup")} 
           className={textBrand}
           disabled={isLoading}
         >
