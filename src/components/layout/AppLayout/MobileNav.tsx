@@ -2,20 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, CheckSquare, Settings } from "lucide-react";
+import { useAppNavigation } from "@/hooks/ui/app-navigation/useAppNavigation";
 import { useScrollDirection } from "@/hooks/ui/useScrollDirection";
 import { textBrand } from "@/config/uiClasses";
 
 export function MobileNav() {
   const pathname = usePathname();
+  const navItems = useAppNavigation();
   const isVisible = useScrollDirection();
-
-  const navItems = [
-    { href: "/dashboard", label: "Home", icon: Home },
-    { href: "/notes", label: "Notes", icon: FileText },
-    { href: "/todos", label: "Todos", icon: CheckSquare },
-    { href: "/settings", label: "Settings", icon: Settings },
-  ];
 
   return (
     <nav 
@@ -27,6 +21,7 @@ export function MobileNav() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
+          
           return (
             <Link 
               key={item.href} 
@@ -34,7 +29,9 @@ export function MobileNav() {
               className={`flex flex-col items-center gap-1 ${isActive ? textBrand : "text-foreground/50"}`}
             >
               <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-[10px] font-medium uppercase tracking-wider">{item.label}</span>
+              <span className="text-[10px] font-medium uppercase tracking-wider">
+                {item.mobileLabel}
+              </span>
             </Link>
           );
         })}

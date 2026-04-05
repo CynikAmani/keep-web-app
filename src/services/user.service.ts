@@ -8,4 +8,12 @@ export class UserService {
   static getUserId() {
     return useAuthStore.getState().user?.id || null;
   }
+
+  static getRoles() {
+    return useAuthStore.getState().roles || [];
+  }
+
+  static getPermissions() {
+    return useAuthStore.getState().permissions || [];
+  }
 }
