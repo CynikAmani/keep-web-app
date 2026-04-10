@@ -18,17 +18,34 @@ export const metadata: Metadata = {
   description: "Your personal note-taking app built with Next.js and TypeScript.",
 }
 
+const themeScript = `
+(function() {
+  try {
+    const saved = localStorage.getItem("theme");
+    const theme = saved ? saved : "dark";
+    document.documentElement.classList.add(theme);
+  } catch (e) {}
+})();
+`
+
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-             {children}
+          {children}
         </ThemeProvider>
       </body>
     </html>

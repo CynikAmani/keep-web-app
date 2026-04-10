@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useMemo, createContext, useContext, ReactNode } from "react"
+import { useEffect, useState, createContext, useContext, ReactNode } from "react"
 
 type Theme = "light" | "dark"
 
@@ -9,53 +9,58 @@ interface ThemeContextType {
   toggleTheme: () => void
 }
 
-
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
-interface ThemeProviderProps {
-  children: ReactNode
-}
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
-export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [theme, setTheme] = useState<Theme>("light")
+  const [theme, setTheme] = useState<Theme>("dark")
 
   /*
-   -----------------------------------------------------------------------
-   | Load saved theme from localStorage
-   -----------------------------------------------------------------------
+  ----------------------------------------------------------------
+  | Read the already-applied theme from <html>
+  ----------------------------------------------------------------
   */
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as Theme
-    if (saved) setTheme(saved)
-  }, []);
+    const root = document.documentElement
 
+    if (root.classList.contains("light")) {
+      setTheme("light")
+    } else {
+      setTheme("dark")
+    }
+  }, [])
 
   /*
-  ------------------------------------------------------------------------
-  | Apply theme class to <html>
-  ------------------------------------------------------------------------
+  ----------------------------------------------------------------
+  | Apply theme
+  ----------------------------------------------------------------
   */
   useEffect(() => {
-    const opposite = theme === "light" ? "dark" : "light"
-    document.documentElement.classList.remove(opposite)
-    document.documentElement.classList.add(theme)
+    const root = document.documentElement
+
+    root.classList.remove("light", "dark")
+    root.classList.add(theme)
+
     localStorage.setItem("theme", theme)
   }, [theme])
 
-  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"))
+  const toggleTheme = () => {
+    setTheme((t) => (t === "light" ? "dark" : "light"))
+  }
 
-  return <ThemeContext value={{ theme, toggleTheme }}>{children}</ThemeContext>
+  return (
+    <ThemeContext value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext>
+  )
 }
 
-
-
-/*
- -------------------------------------------------------------------------
- | Custom hook with type safety
- -------------------------------------------------------------------------
-*/
-export const useTheme = (): ThemeContextType => {
+export const useTheme = () => {
   const ctx = useContext(ThemeContext)
-  if (!ctx) throw new Error("useTheme must be used inside ThemeProvider")
+
+  if (!ctx) {
+    throw new Error("useTheme must be used inside ThemeProvider")
+  }
+
   return ctx
 }

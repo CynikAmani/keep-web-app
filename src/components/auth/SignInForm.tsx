@@ -34,7 +34,7 @@ export function SignInForm() {
       
       setEmail("")
       setPassword("") 
-      router.push("/dashboard")
+      router.push("/app/dashboard")
       router.refresh()
     } catch (err: any) {
       setError(err.message || "Failed to sign in. Please check your credentials.")

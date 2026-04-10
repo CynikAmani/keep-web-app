@@ -50,7 +50,7 @@ export function SignUpForm() {
       })
 
       closeModal()
-      router.push("/dashboard")
+      router.push("/app/dashboard")
       router.refresh()
     } catch (err: any) {
       setError(err.message || "Failed to create account")

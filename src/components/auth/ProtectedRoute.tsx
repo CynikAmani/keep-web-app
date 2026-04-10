@@ -1,46 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth.store";
 import { Authenticating } from "./Authenticating";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  fallbackPath?: string;
 }
 
-export function ProtectedRoute({
-  children,
-  fallbackPath = "/unauthorized",
-}: ProtectedRouteProps) {
+export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
-  const [isHydrated, setIsHydrated] = useState(false);
+
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  
-
   useEffect(() => {
-    const unsub = useAuthStore.persist.onFinishHydration(() => {
-      setIsHydrated(true);
-    });
-
-    if (useAuthStore.persist.hasHydrated()) {
-      setIsHydrated(true);
+    if (hasHydrated && !isAuthenticated) {
+      router.replace("/unauthorized");
     }
+  }, [hasHydrated, isAuthenticated, router]);
 
-    return () => unsub();
-  }, []);
+  if (!hasHydrated) return <Authenticating />;
 
-  useEffect(() => {
-    if (isHydrated && !isAuthenticated) {
-      router.push(fallbackPath);
-    }
-  }, [isHydrated, isAuthenticated, router, fallbackPath]);
+  if (!isAuthenticated) return <Authenticating />;
 
-  if (!isHydrated) {
-    return <Authenticating />;
-  }
-
-  return isAuthenticated ? <>{children}</> : null;
+  return <>{children}</>;
 }

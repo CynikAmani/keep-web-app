@@ -9,8 +9,10 @@ export interface AuthState {
   permissions: string[];
   isAuthenticated: boolean;
   isLoading: boolean;
+  hasHydrated: boolean;
   setAuth: (data: { user: User; token: string; roles: string[]; permissions: string[] }) => void;
   clearAuth: () => void;
+  setHydrated: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -20,16 +22,28 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       roles: [],
       permissions: [],
-      isAuthenticated: true, 
+      isAuthenticated: true,
       isLoading: false,
+      hasHydrated: false,
       setAuth: ({ user, token, roles, permissions }) =>
         set({ user, token, roles, permissions, isAuthenticated: true }),
       clearAuth: () =>
         set({ user: null, token: null, roles: [], permissions: [], isAuthenticated: false }),
+      setHydrated: () => set({ hasHydrated: true }),
     }),
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage), 
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        roles: state.roles,
+        permissions: state.permissions,
+        isAuthenticated: state.isAuthenticated,
+      }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHydrated();
+      },
     }
   )
 );

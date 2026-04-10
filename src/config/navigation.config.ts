@@ -12,35 +12,35 @@ export interface NavItem {
 
 export const APP_NAVIGATION: NavItem[] = [
   { 
-    href: "/dashboard", 
+    href: "/app/dashboard", 
     label: "Dashboard", 
     mobileLabel: "Home", 
     icon: Home,
     allowedRoles: "*" 
   },
   { 
-    href: "/notes", 
+    href: "/app/notes", 
     label: "Notes", 
     mobileLabel: "Notes", 
     icon: FileText,
     allowedRoles: "*" 
   },
   { 
-    href: "/todos", 
+    href: "/app/todos", 
     label: "Todos", 
     mobileLabel: "Tasks", 
     icon: CheckSquare,
     allowedRoles: "*" 
   },
   { 
-    href: "/users", 
+    href: "/app/users", 
     label: "Users", 
     mobileLabel: "Users", 
     icon: Users, 
     allowedRoles: ["admin", "super-admin", "super-user"] 
   },
   { 
-    href: "/settings", 
+    href: "/app/settings", 
     label: "Settings", 
     mobileLabel: "Settings", 
     icon: Settings,

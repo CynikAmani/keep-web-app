@@ -1,4 +1,9 @@
 /*--------------------------------------------------------------------------
+| FONTS & TYPOGRAPHY
+---------------------------------------------------------------------------*/
+export const fontSans = "font-sans";
+
+/*--------------------------------------------------------------------------
 | BUTTONS - Base styles
 ---------------------------------------------------------------------------*/
 const btnBase = "inline-flex items-center justify-center font-medium transition-all duration-200 cursor-pointer select-none active:scale-95";
@@ -36,6 +41,13 @@ export const btnBrandMd = `${btnMd} bg-brand-dark text-white hover:bg-brand-dark
 export const btnBrandLg = `${btnLg} bg-brand-dark text-white hover:bg-brand-dark/90`;
 
 /*--------------------------------------------------------------------------
+| BUTTONS - Brand Outline variants
+---------------------------------------------------------------------------*/
+export const btnBrandOutlineSm = `${btnSm} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white`;
+export const btnBrandOutlineMd = `${btnMd} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white`;
+export const btnBrandOutlineLg = `${btnLg} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white`;
+
+/*--------------------------------------------------------------------------
 | BUTTONS - Ghost variants
 ---------------------------------------------------------------------------*/
 export const btnGhostSm = `${btnSm} bg-transparent hover:bg-accent text-foreground/80 hover:text-foreground`;
@@ -43,21 +55,23 @@ export const btnGhostMd = `${btnMd} bg-transparent hover:bg-accent text-foregrou
 export const btnGhostLg = `${btnLg} bg-transparent hover:bg-accent text-foreground/80 hover:text-foreground`;
 
 /*--------------------------------------------------------------------------
+| BUTTONS - Destructive variants
+---------------------------------------------------------------------------*/
+export const btnDestructiveSm = `${btnSm} bg-destructive text-white hover:bg-destructive/90`;
+export const btnDestructiveMd = `${btnMd} bg-destructive text-white hover:bg-destructive/90`;
+export const btnDestructiveLg = `${btnLg} bg-destructive text-white hover:bg-destructive/90`;
+
+export const btnDestructiveOutlineSm = `${btnSm} border border-destructive text-destructive bg-transparent hover:bg-destructive hover:text-white`;
+export const btnDestructiveOutlineMd = `${btnMd} border border-destructive text-destructive bg-transparent hover:bg-destructive hover:text-white`;
+export const btnDestructiveOutlineLg = `${btnLg} border border-destructive text-destructive bg-transparent hover:bg-destructive hover:text-white`;
+
+/*--------------------------------------------------------------------------
 | SEMANTIC ACTION BUTTONS (Intent-based)
 ---------------------------------------------------------------------------*/
-// Create / Save / Success
 export const btnCreate = `${btnMd} bg-emerald-600 text-white hover:bg-emerald-700 gap-2 shadow-sm`;
-
-// Edit / Update / Info (Amber/Warning)
 export const btnEdit = `${btnOutlineMd} border-amber-500/50 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/20 gap-2`;
-
-// Delete / Danger / Remove
 export const btnDelete = `${btnGhostMd} text-destructive hover:bg-destructive/10 gap-2`;
-
-// View / Neutral / Secondary
 export const btnView = `${btnGhostMd} text-foreground/70 hover:bg-accent gap-2`;
-
-// Cancel / Close
 export const btnCancel = `${btnOutlineMd} border-border text-muted-foreground hover:bg-accent`;
 
 /*--------------------------------------------------------------------------
@@ -87,11 +101,25 @@ export const headingSm = "text-lg font-medium";
 
 export const textPrimary = "text-foreground";        
 export const textSecondary = "text-muted-foreground";  
+export const textTertiary = "text-foreground/70";
 export const textBrand = "text-brand";
 export const textDestructive = "text-destructive";
 
 /*--------------------------------------------------------------------------
+| BADGES & INDICATORS
+---------------------------------------------------------------------------*/
+export const badge = "inline-block px-2 py-1 text-xs font-medium rounded-full bg-accent text-accent-foreground";
+export const badgeBrand = "inline-block px-2 py-1 text-xs font-medium rounded-full bg-brand/10 text-brand";
+export const badgeDestructive = "inline-block px-2 py-1 text-xs font-medium rounded-full bg-destructive/10 text-destructive";
+
+/*--------------------------------------------------------------------------
 | FORM ELEMENTS
 ---------------------------------------------------------------------------*/
-export const badgeBrand = "inline-block px-2 py-1 text-xs font-medium rounded-full bg-brand/10 text-brand";
 export const input = "w-full rounded-md border border-border bg-input px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-ring outline-none transition-all";
+export const inputError = "w-full rounded-md border border-destructive bg-input px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-destructive";
+
+/*--------------------------------------------------------------------------
+| DIVIDERS
+---------------------------------------------------------------------------*/
+export const divider = "border-t border-border my-4";
+export const dividerBrand = "border-t border-brand my-4";
