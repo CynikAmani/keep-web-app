@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
-import { navigateTo } from "@/utils/navigateTo";
 import { useAuthStore } from "@/store/auth.store";
+
 
 const api: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api",
@@ -8,6 +8,7 @@ const api: AxiosInstance = axios.create({
 });
 
 let isRedirecting = false;
+
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -20,26 +21,25 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     const originalRequest = error.config;
-    
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       if (!isRedirecting) {
         isRedirecting = true;
         useAuthStore.getState().clearAuth();
-        navigateTo("/");
-        
-        // Reset after redirect
-        setTimeout(() => {
-          isRedirecting = false;
-        }, 1000);
+
+        if (typeof window !== "undefined" && window.location) {
+          window.location.href = "/";
+        }
       }
     }
-    
+
     return Promise.reject(error);
   }
 );

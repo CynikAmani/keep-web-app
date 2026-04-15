@@ -1,42 +1,47 @@
+import axios from "axios";
 import api from "@/lib/axios";
 import { useAuthStore } from "@/store/auth.store";
-import { User, SigninPayload, SignupPayload, AuthResponse } from "@/types/auth.types";
+import { User, SigninPayload, SignupPayload, AuthResourceResponse } from "@/types/auth.types";
 
 export class AuthService {
   async signin(payload: SigninPayload): Promise<User> {
+    let res;
+
     try {
-      const res = await api.post<AuthResponse>("/auth/signin", payload);
-      useAuthStore.getState().setAuth({
-        user: res.data.user,
-        token: res.data.token,
-        roles: res.data.roles,
-        permissions: res.data.permissions,
-      });
-      return res.data.user;
-    } catch (error: any) {
-      if (error.response) {
-        throw new Error(error.response.data?.message || "Authentication failed");
+      res = await api.post<AuthResourceResponse>("/auth/signin", payload);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || "Authentication failed");
       }
-      throw new Error("Network error. Please try again.");
+      throw error;
     }
+
+    useAuthStore.getState().setAuth({
+      user: res.data.data.user,
+      token: res.data.data.token,
+    });
+
+    return res.data.data.user;
   }
 
   async signup(payload: SignupPayload): Promise<User> {
+    let res;
+
     try {
-      const res = await api.post<AuthResponse>("/auth/signup", payload);
-      useAuthStore.getState().setAuth({
-        user: res.data.user,
-        token: res.data.token,
-        roles: res.data.roles,
-        permissions: res.data.permissions,
-      });
-      return res.data.user;
-    } catch (error: any) {
-      if (error.response) {
-        throw new Error(error.response.data?.message || "Registration failed");
+      res = await api.post<AuthResourceResponse>("/auth/signup", payload);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || "Registration failed");
       }
-      throw new Error("Network error. Please try again.");
+      throw error;
     }
+
+    useAuthStore.getState().setAuth({
+      user: res.data.data.user,
+      token: res.data.data.token,
+    });
+
+    return res.data.data.user;
   }
 
   async logout(): Promise<void> {
@@ -46,6 +51,9 @@ export class AuthService {
       console.error("Logout error:", error);
     } finally {
       useAuthStore.getState().clearAuth();
+      if (typeof window !== "undefined") {
+        window.location.replace("/");
+      }
     }
   }
 }

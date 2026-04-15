@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Keep - Next.js Note App",
-  description: "Your personal note-taking app built with Next.js and TypeScript.",
+  title: "Keep",
+  description: "Keep is a simple and secure tool for keeping notes and managing todos. Built with Next.js, TypeScript, and Tailwind CSS.",
 }
 
 const themeScript = `

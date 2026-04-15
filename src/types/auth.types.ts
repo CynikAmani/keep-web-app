@@ -2,6 +2,9 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  roles?: string[];
+  permissions?: string[];
+  is_verified?: boolean;
   email_verified_at?: string | null;
   created_at?: string;
   updated_at?: string;
@@ -10,8 +13,10 @@ export interface User {
 export interface AuthResponse {
   token: string;
   user: User;
-  roles: string[];
-  permissions: string[];
+}
+
+export interface AuthResourceResponse {
+  data: AuthResponse;
 }
 
 export interface SigninPayload {

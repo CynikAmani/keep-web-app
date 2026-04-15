@@ -10,10 +10,10 @@ export class UserService {
   }
 
   static getRoles() {
-    return useAuthStore.getState().roles || [];
+    return useAuthStore.getState().user?.roles || [];
   }
 
   static getPermissions() {
-    return useAuthStore.getState().permissions || [];
+    return useAuthStore.getState().user?.permissions || [];
   }
 }

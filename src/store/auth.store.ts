@@ -5,30 +5,45 @@ import { User } from "@/types/auth.types";
 export interface AuthState {
   user: User | null;
   token: string | null;
-  roles: string[];
-  permissions: string[];
   isAuthenticated: boolean;
   isLoading: boolean;
   hasHydrated: boolean;
-  setAuth: (data: { user: User; token: string; roles: string[]; permissions: string[] }) => void;
+  setAuth: (data: { user: User; token: string }) => void;
   clearAuth: () => void;
   setHydrated: () => void;
 }
+
+const ensureStringArray = (value: unknown): string[] =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+
+const normalizeUser = (user: User | null | undefined): User => {
+  if (!user) {
+    throw new Error("Auth store received an invalid user payload.");
+  }
+
+  return {
+    ...user,
+    roles: ensureStringArray(user.roles),
+    permissions: ensureStringArray(user.permissions),
+  };
+};
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
       token: null,
-      roles: [],
-      permissions: [],
-      isAuthenticated: true,
+      isAuthenticated: false,
       isLoading: false,
       hasHydrated: false,
-      setAuth: ({ user, token, roles, permissions }) =>
-        set({ user, token, roles, permissions, isAuthenticated: true }),
+      setAuth: ({ user, token }) =>
+        set({
+          user: normalizeUser(user),
+          token,
+          isAuthenticated: true,
+        }),
       clearAuth: () =>
-        set({ user: null, token: null, roles: [], permissions: [], isAuthenticated: false }),
+        set({ user: null, token: null, isAuthenticated: false }),
       setHydrated: () => set({ hasHydrated: true }),
     }),
     {
@@ -37,8 +52,6 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         user: state.user,
         token: state.token,
-        roles: state.roles,
-        permissions: state.permissions,
         isAuthenticated: state.isAuthenticated,
       }),
       onRehydrateStorage: () => (state) => {

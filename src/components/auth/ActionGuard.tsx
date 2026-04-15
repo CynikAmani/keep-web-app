@@ -14,13 +14,14 @@ export function ActionGuard({
   allowedRoles, 
   fallback = null 
 }: ActionGuardProps) {
-  const { roles: userRoles, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
+  const safeRoles = user?.roles || [];
 
   if (!isAuthenticated) return fallback;
 
   const hasAccess = 
     allowedRoles === "*" || 
-    allowedRoles.some((role) => userRoles.includes(role));
+    allowedRoles.some((role) => safeRoles.includes(role));
 
   return hasAccess ? <>{children}</> : fallback;
 }

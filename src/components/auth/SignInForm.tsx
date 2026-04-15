@@ -37,6 +37,7 @@ export function SignInForm() {
       router.push("/app/dashboard")
       router.refresh()
     } catch (err: any) {
+      console.error("Sign-in failed:", err)
       setError(err.message || "Failed to sign in. Please check your credentials.")
     } finally {
       setIsLoading(false)
