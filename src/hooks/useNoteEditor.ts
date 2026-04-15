@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { noteService } from "@/services/note.service";
 import { Note, NotePayload } from "@/types/note.types";
 
-export function useNoteEditor(initialData: Note | null, onSave?: () => void) {
+export function useNoteEditor(initialData: Note | null, onSave?: (note?: Note) => void) {
   const [loading, setLoading] = useState(false);
   const [note, setNote] = useState<NotePayload>({
     title: "",
@@ -38,8 +38,8 @@ export function useNoteEditor(initialData: Note | null, onSave?: () => void) {
 
     setLoading(true);
     try {
-      await noteService.saveNote(note, initialData?.id);
-      if (onSave) onSave();
+      const savedNote = await noteService.saveNote(note, initialData?.id);
+      if (onSave) onSave(savedNote);
     } catch (error) {
       console.error("Save failed:", error);
     } finally {

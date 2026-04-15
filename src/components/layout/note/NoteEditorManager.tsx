@@ -19,8 +19,9 @@ export default function NoteEditorManager() {
       {/* Editor Container */}
       <div className="relative z-10 w-full max-w-2xl animate-in fade-in zoom-in duration-200">
         <NoteEditor 
-          initialData={activeNote} 
-          onSave={closeNoteEditor} 
+          initialData={activeNote}
+          onClose={closeNoteEditor}
+          onSave={closeNoteEditor}
         />
       </div>
     </div>

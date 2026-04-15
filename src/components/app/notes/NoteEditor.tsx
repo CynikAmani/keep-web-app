@@ -5,10 +5,11 @@ import { Note } from "@/types/note.types";
 
 interface NoteEditorProps {
   initialData: Note | null;
-  onSave: () => void;
+  onClose: () => void;
+  onSave: (note?: Note) => void;
 }
 
-export default function NoteEditor({ initialData, onSave }: NoteEditorProps) {
+export default function NoteEditor({ initialData, onClose, onSave }: NoteEditorProps) {
   const { note, loading, updateField, handleSave } = useNoteEditor(initialData, onSave);
   const isEditMode = Boolean(initialData?.id);
 
@@ -64,7 +65,7 @@ export default function NoteEditor({ initialData, onSave }: NoteEditorProps) {
 
         <div className="flex items-center gap-2">
           <button 
-            onClick={onSave} 
+            onClick={onClose}
             className={`${ui.btnGhostMd} ${ui.textSecondary} px-4 font-medium`}
           >
             Close
