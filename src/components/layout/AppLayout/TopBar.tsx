@@ -17,7 +17,7 @@ export function TopBar() {
       isVisible ? "translate-y-0" : "-translate-y-full"
     }`}>
       <div className="h-full flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/app/dashboard" className="flex items-center gap-2">
           <StickyNote size={26} className={textBrand} />
           <span className="text-2xl font-bold tracking-tight">Keep</span>
           <span className={badgeBrand}>Beta</span>

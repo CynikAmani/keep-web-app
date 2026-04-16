@@ -22,7 +22,7 @@ export default function NoteCard({ note, onEdit }: NoteCardProps) {
     <button
       type="button"
       onClick={onEdit}
-      className={`${ui.cardLg} ${ui.stackMd} w-full border-none bg-card text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl`}
+      className={`${ui.cardLg} ${ui.stackMd} w-full border-none bg-card text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl cursor-pointer`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
