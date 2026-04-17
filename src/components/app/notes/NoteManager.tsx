@@ -3,7 +3,7 @@
 import * as ui from "@/config/uiClasses";
 import NoteEditor from "@/components/app/notes/NoteEditor";
 import NoteDisplay from "@/components/app/notes/NoteDisplay";
-import { useNoteManager } from "@/hooks/notes/useNoteManager";
+import { useNoteManager } from "@/hooks/app/notes/useNoteManager";
 
 export default function NoteManager() {
   const {

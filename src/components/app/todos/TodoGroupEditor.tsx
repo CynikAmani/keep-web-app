@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Pin, PinOff, Archive, Trash2, Save, Check, Loader2 } from "lucide-react";
 import { TodoGroup, CreateTodoGroupPayload, UpdateTodoGroupPayload, TodoItem } from "@/types/todos.types";
 import * as ui from "@/config/uiClasses";
-import { useTodoGroupEditor } from "@/hooks/todos/useTodoGroupEditor";
+import { PERMISSIONS } from "@/config/permissions.config";
+import { useTodoGroupEditor } from "@/hooks/app/todos/useTodoGroupEditor";
 import TodoGroupEditorHeader from "@/components/app/todos/TodoGroupEditorHeader";
 import TodoGroupEditorItemInput from "@/components/app/todos/TodoGroupEditorItemInput";
 import TodoEditorItemList from "@/components/app/todos/TodoEditorItemList";
-import TodoGroupEditorFooter from "@/components/app/todos/TodoGroupEditorFooter";
 
 interface TodoGroupEditorProps {
   initialData: TodoGroup | null;
@@ -46,14 +47,18 @@ export default function TodoGroupEditor({
   const [localItems, setLocalItems] = useState<LocalTodoItem[]>([]);
   const [newItemInput, setNewItemInput] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isArchiving, setIsArchiving] = useState(false);
+  const [isPinning, setIsPinning] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const isEditMode = !!initialData;
+  const isAnyActionLoading = isSaving || isDeleting || isArchiving || isPinning;
 
-  // Initialize local items from server data
   useEffect(() => {
     if (initialItems && initialItems.length > 0) {
       setLocalItems(
         initialItems.map((item) => ({
-          id: item.id, // Keep as number - don't convert
+          id: item.id,
           task: item.task,
           is_completed: item.is_completed,
         }))
@@ -66,13 +71,11 @@ export default function TodoGroupEditor({
 
   const handleAddItem = () => {
     if (!newItemInput.trim()) return;
-
     const newItem: LocalTodoItem = {
-      id: String(Date.now() + Math.random()), // Simple unique local ID
+      id: String(Date.now() + Math.random()),
       task: newItemInput.trim(),
       is_completed: false,
     };
-
     setLocalItems((prev) => [...prev, newItem]);
     setNewItemInput("");
   };
@@ -97,10 +100,7 @@ export default function TodoGroupEditor({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSaving(true);
     setSaveError(null);
@@ -109,9 +109,7 @@ export default function TodoGroupEditor({
       await onSave(formData, localItems, initialItems);
     } catch (err) {
       console.error("Save failed:", err);
-      setSaveError(
-        err instanceof Error ? err.message : "Failed to save group"
-      );
+      setSaveError(err instanceof Error ? err.message : "Failed to save group");
     } finally {
       setIsSaving(false);
     }
@@ -119,37 +117,33 @@ export default function TodoGroupEditor({
 
   const handleDelete = async () => {
     if (!initialData || !onDelete) return;
-
     if (!confirm(`Delete "${initialData.title}"? This action cannot be undone.`)) {
       return;
     }
-
-    setIsSaving(true);
+    setIsDeleting(true);
     try {
       await onDelete(initialData.id);
     } catch (err) {
       console.error("Delete failed:", err);
       setSaveError(err instanceof Error ? err.message : "Failed to delete group");
-      setIsSaving(false);
+      setIsDeleting(false);
     }
   };
 
   const handleArchive = async () => {
     if (!initialData || !onArchive) return;
-
-    setIsSaving(true);
+    setIsArchiving(true);
     try {
       await onArchive(initialData.id);
     } catch (err) {
       console.error("Archive failed:", err);
       setSaveError(err instanceof Error ? err.message : "Failed to archive group");
-      setIsSaving(false);
+      setIsArchiving(false);
     }
   };
 
   const handleTogglePin = async () => {
     if (!initialData || !onTogglePin) return;
-
     try {
       await onTogglePin(initialData.id);
     } catch (err) {
@@ -159,46 +153,120 @@ export default function TodoGroupEditor({
   };
 
   return (
-    <div className={`${ui.cardLg} flex flex-col w-full shadow-2xl bg-card border-none animate-in fade-in zoom-in-95 duration-200 max-h-[90vh]`}>
-      <form id="editor-form" onSubmit={handleSubmit} className="flex flex-col gap-3 shrink-0">
+    <div className={`${ui.cardLg} flex flex-col w-full shadow-2xl bg-card border-none animate-in fade-in zoom-in-95 duration-200 sm:max-w-2xl max-h-screen sm:max-h-[85vh]`}>
+      {/* Header */}
+      <form id="editor-form" onSubmit={handleSubmit} className="flex flex-col gap-3 shrink-0 px-4 sm:px-6 pt-4 sm:pt-6">
         <TodoGroupEditorHeader
           formData={formData}
-        updateField={(field: string, value: any) => {
-          updateField(field as any, value);
-        }}
+          updateField={(field: string, value: any) => {
+            updateField(field as any, value);
+          }}
         />
 
         <TodoGroupEditorItemInput
           value={newItemInput}
           onChange={setNewItemInput}
           onAdd={handleAddItem}
-          isSaving={isSaving}
+          isSaving={isAnyActionLoading}
         />
       </form>
 
-      <TodoEditorItemList
-        items={localItems}
-        isLoading={isLoadingItems}
-        onToggleCompletion={handleToggleItemCompletion}
-        onChangeTask={handleUpdateItemTask}
-        onDelete={handleDeleteItem}
-      />
+      {/* Items List - Expands with content, scrolls only when needed */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-2">
+        <TodoEditorItemList
+          items={localItems}
+          isLoading={isLoadingItems}
+          onToggleCompletion={handleToggleItemCompletion}
+          onChangeTask={handleUpdateItemTask}
+          onDelete={handleDeleteItem}
+        />
+      </div>
 
-      <TodoGroupEditorFooter
-        color={formData.color || "white"}
-        onColorChange={(color) => {
-          updateField("color" as any, color);
-        }}
-        isSaving={isSaving}
-        isEditing={!!initialData}
-        isPinned={initialData?.is_pinned}
-        isArchived={initialData?.is_archived}
-        onTogglePin={handleTogglePin}
-        onArchive={handleArchive}
-        onDelete={handleDelete}
-        onClose={onClose}
-        onSave={handleSubmit}
-      />
+      {/* Actions Footer - Requires PERMISSIONS.TODO.UPDATE_GROUP (pin/archive) and PERMISSIONS.TODO.DELETE_GROUP (delete) */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 px-4 sm:px-6 pb-4 sm:pb-6 border-t border-border/30 shrink-0">
+        {/* Left side: Action buttons */}
+        <div className="flex items-center gap-1">
+          {isEditMode && (
+            <>
+              {/* Pin/Unpin */}
+              <button
+                onClick={handleTogglePin}
+                disabled={isAnyActionLoading}
+                type="button"
+                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-accent ${
+                  initialData?.is_pinned ? "bg-brand/10 text-brand" : ""
+                }`}
+                title={initialData?.is_pinned ? "Unpin group" : "Pin group"}
+              >
+                {initialData?.is_pinned ? (
+                  <PinOff size={20} strokeWidth={2} />
+                ) : (
+                  <Pin size={20} strokeWidth={2} />
+                )}
+              </button>
+
+              {/* Archive/Restore */}
+              <button
+                onClick={handleArchive}
+                disabled={isAnyActionLoading}
+                type="button"
+                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-accent`}
+                title={initialData?.is_archived ? "Restore group" : "Archive group"}
+              >
+                <Archive size={20} strokeWidth={2} />
+              </button>
+
+              {/* Delete */}
+              <button
+                onClick={handleDelete}
+                disabled={isAnyActionLoading}
+                type="button"
+                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-destructive/10 text-destructive`}
+                title="Delete group"
+              >
+                <Trash2 size={20} strokeWidth={2} />
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Right side: Close + Save buttons */}
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <button
+            type="button"
+            onClick={onClose}
+            className={`${ui.btnGhostMd} ${ui.textSecondary} px-4 font-medium flex-1 sm:flex-none`}
+            disabled={isAnyActionLoading}
+          >
+            Close
+          </button>
+
+          <button
+            type="submit"
+            form="editor-form"
+            disabled={isAnyActionLoading}
+            className={`
+              ${ui.btnCreate} 
+              min-w-12 h-11 px-6 rounded-full shadow-md hover:shadow-lg
+              flex items-center justify-center gap-2 flex-1 sm:flex-none
+            `}
+          >
+            {isAnyActionLoading ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : isEditMode ? (
+              <>
+                <Check size={18} strokeWidth={3} />
+                <span className="font-bold">Update</span>
+              </>
+            ) : (
+              <>
+                <Save size={18} strokeWidth={2.5} />
+                <span className="font-bold">Save</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

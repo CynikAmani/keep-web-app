@@ -1,7 +1,7 @@
 "use client";
 
 import * as ui from "@/config/uiClasses";
-import { useTodoGroupEditor } from "@/hooks/todos/useTodoGroupEditor";
+import { useTodoGroupEditor } from "@/hooks/app/todos/useTodoGroupEditor";
 
 interface TodoGroupEditorHeaderProps {
   formData: ReturnType<typeof useTodoGroupEditor>["formData"];

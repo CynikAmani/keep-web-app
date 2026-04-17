@@ -2,20 +2,13 @@
 
 import * as ui from "@/config/uiClasses";
 import { Pin } from "lucide-react";
+import { dateFormatter } from "@/utils/dateFormatter";
 import { Note } from "@/types/note.types";
 
 interface NoteCardProps {
   note: Note;
   onEdit: () => void;
 }
-
-const formatUpdatedAt = (updatedAt: string) =>
-  new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(updatedAt));
 
 export default function NoteCard({ note, onEdit }: NoteCardProps) {
   return (
@@ -47,7 +40,7 @@ export default function NoteCard({ note, onEdit }: NoteCardProps) {
       </div>
 
       <div className="flex items-center justify-between gap-3 text-sm">
-        <span className={ui.textSecondary}>Updated {formatUpdatedAt(note.updated_at)}</span>
+        <span className={ui.textSecondary}>Updated {dateFormatter.cardDateTime(note.updated_at)}</span>
         <span className={ui.btnGhostSm}>Open</span>
       </div>
     </button>

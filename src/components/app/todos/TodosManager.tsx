@@ -3,7 +3,7 @@
 import * as ui from "@/config/uiClasses";
 import TodoGroupEditor from "@/components/app/todos/TodoGroupEditor";
 import TodoGroupDisplay from "@/components/app/todos/TodoGroupDisplay";
-import { useTodosManager } from "@/hooks/todos/useTodosManager";
+import { useTodosManager } from "@/hooks/app/todos/useTodosManager";
 
 export default function TodosManager() {
   const {
