@@ -34,13 +34,13 @@ export const btnSecondaryLg = `${btnLg} bg-secondary text-secondary-foreground h
 /*--------------------------------------------------------------------------
 | BUTTONS - Outline variants
 ---------------------------------------------------------------------------*/
-export const btnOutlineSm = `${btnSm} border border-border bg-transparent hover:bg-accent text-foreground`;
-export const btnOutlineMd = `${btnMd} border border-border bg-transparent hover:bg-accent text-foreground`;
-export const btnOutlineLg = `${btnLg} border border-border bg-transparent hover:bg-accent text-foreground`;
+export const btnOutlineSm = `${btnSm} border border-[var(--button-outline)]/30 bg-transparent hover:bg-[var(--button-outline)]/8 text-[var(--button-outline)]`;
+export const btnOutlineMd = `${btnMd} border border-[var(--button-outline)]/30 bg-transparent hover:bg-[var(--button-outline)]/8 text-[var(--button-outline)]`;
+export const btnOutlineLg = `${btnLg} border border-[var(--button-outline)]/30 bg-transparent hover:bg-[var(--button-outline)]/8 text-[var(--button-outline)]`;
 
-export const btnOutlineResponsiveSm = `${btnResponsiveSm} border border-border bg-transparent hover:bg-accent text-foreground active:bg-accent/80`;
-export const btnOutlineResponsiveMd = `${btnResponsiveMd} border border-border bg-transparent hover:bg-accent text-foreground active:bg-accent/80`;
-export const btnOutlineResponsiveLg = `${btnResponsiveLg} border border-border bg-transparent hover:bg-accent text-foreground active:bg-accent/80`;
+export const btnOutlineResponsiveSm = `${btnResponsiveSm} border border-[var(--button-outline)]/30 bg-transparent hover:bg-[var(--button-outline)]/8 text-[var(--button-outline)] active:bg-[var(--button-outline)]/15`;
+export const btnOutlineResponsiveMd = `${btnResponsiveMd} border border-[var(--button-outline)]/30 bg-transparent hover:bg-[var(--button-outline)]/8 text-[var(--button-outline)] active:bg-[var(--button-outline)]/15`;
+export const btnOutlineResponsiveLg = `${btnResponsiveLg} border border-[var(--button-outline)]/30 bg-transparent hover:bg-[var(--button-outline)]/8 text-[var(--button-outline)] active:bg-[var(--button-outline)]/15`;
 
 /*--------------------------------------------------------------------------
 | BUTTONS - Brand variants
