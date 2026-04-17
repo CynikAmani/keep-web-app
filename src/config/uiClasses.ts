@@ -6,11 +6,16 @@ export const fontSans = "font-sans";
 /*--------------------------------------------------------------------------
 | BUTTONS - Base styles
 ---------------------------------------------------------------------------*/
-const btnBase = "inline-flex items-center justify-center font-medium transition-all duration-200 cursor-pointer select-none active:scale-95";
+const btnBase = "inline-flex items-center justify-center font-medium transition-all duration-200 cursor-pointer select-none active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
 export const btnSm = `${btnBase} px-3 py-1.5 text-sm rounded-md`;
 export const btnMd = `${btnBase} px-4 py-2 text-sm rounded-lg`;
 export const btnLg = `${btnBase} px-6 py-3 text-base rounded-xl`;
+
+/* Mobile-first responsive buttons */
+export const btnResponsiveSm = `${btnBase} px-3 py-2 sm:px-3 sm:py-1.5 text-xs sm:text-sm rounded-md min-h-10 sm:min-h-auto`;
+export const btnResponsiveMd = `${btnBase} px-4 py-2.5 sm:px-4 sm:py-2 text-sm rounded-lg min-h-11 sm:min-h-auto`;
+export const btnResponsiveLg = `${btnBase} px-4 py-3 sm:px-6 sm:py-3 text-sm sm:text-base rounded-xl min-h-12 sm:min-h-auto w-full sm:w-auto`;
 
 /*--------------------------------------------------------------------------
 | BUTTONS - Primary variants (shadcn theme)
@@ -33,6 +38,10 @@ export const btnOutlineSm = `${btnSm} border border-border bg-transparent hover:
 export const btnOutlineMd = `${btnMd} border border-border bg-transparent hover:bg-accent text-foreground`;
 export const btnOutlineLg = `${btnLg} border border-border bg-transparent hover:bg-accent text-foreground`;
 
+export const btnOutlineResponsiveSm = `${btnResponsiveSm} border border-border bg-transparent hover:bg-accent text-foreground active:bg-accent/80`;
+export const btnOutlineResponsiveMd = `${btnResponsiveMd} border border-border bg-transparent hover:bg-accent text-foreground active:bg-accent/80`;
+export const btnOutlineResponsiveLg = `${btnResponsiveLg} border border-border bg-transparent hover:bg-accent text-foreground active:bg-accent/80`;
+
 /*--------------------------------------------------------------------------
 | BUTTONS - Brand variants
 ---------------------------------------------------------------------------*/
@@ -40,12 +49,20 @@ export const btnBrandSm = `${btnSm} bg-brand-dark text-white hover:bg-brand-dark
 export const btnBrandMd = `${btnMd} bg-brand-dark text-white hover:bg-brand-dark/90`;
 export const btnBrandLg = `${btnLg} bg-brand-dark text-white hover:bg-brand-dark/90`;
 
+export const btnBrandResponsiveSm = `${btnResponsiveSm} bg-brand-dark text-white hover:bg-brand-dark/90 active:bg-brand-dark/80`;
+export const btnBrandResponsiveMd = `${btnResponsiveMd} bg-brand-dark text-white hover:bg-brand-dark/90 active:bg-brand-dark/80`;
+export const btnBrandResponsiveLg = `${btnResponsiveLg} bg-brand-dark text-white hover:bg-brand-dark/90 active:bg-brand-dark/80`;
+
 /*--------------------------------------------------------------------------
 | BUTTONS - Brand Outline variants
 ---------------------------------------------------------------------------*/
 export const btnBrandOutlineSm = `${btnSm} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white`;
 export const btnBrandOutlineMd = `${btnMd} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white`;
 export const btnBrandOutlineLg = `${btnLg} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white`;
+
+export const btnBrandOutlineResponsiveSm = `${btnResponsiveSm} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white active:bg-brand/90`;
+export const btnBrandOutlineResponsiveMd = `${btnResponsiveMd} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white active:bg-brand/90`;
+export const btnBrandOutlineResponsiveLg = `${btnResponsiveLg} border border-brand text-brand bg-transparent hover:bg-brand hover:text-white active:bg-brand/90`;
 
 /*--------------------------------------------------------------------------
 | BUTTONS - Ghost variants
@@ -77,11 +94,21 @@ export const btnCancel = `${btnOutlineMd} border-border text-muted-foreground ho
 /*--------------------------------------------------------------------------
 | LAYOUTS / STACKS
 ---------------------------------------------------------------------------*/
-export const containerPage = "max-w-7xl mx-auto px-6 sm:px-8";
+export const containerPage = "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8";
 export const stackSm = "flex flex-col gap-2";
 export const stackMd = "flex flex-col gap-4";
 export const stackLg = "flex flex-col gap-6";
 export const stackXl = "flex flex-col gap-8";
+
+/* Mobile-responsive stacks */
+export const stackResponsiveSm = "flex flex-col gap-2 sm:gap-2";
+export const stackResponsiveMd = "flex flex-col gap-3 sm:gap-4";
+export const stackResponsiveLg = "flex flex-col gap-4 sm:gap-6";
+export const stackResponsiveXl = "flex flex-col gap-6 sm:gap-8";
+
+/* Button groups for hero sections */
+export const btnGroupResponsive = "flex flex-col gap-3 sm:flex-row sm:gap-4 w-full sm:w-auto";
+export const btnGroupResponsiveCenter = "flex flex-col gap-3 sm:flex-row sm:gap-4 justify-center w-full sm:w-auto";
 
 /*--------------------------------------------------------------------------
 | CARDS
@@ -94,10 +121,10 @@ export const cardSm = `${cardBase} p-2`;
 /*--------------------------------------------------------------------------
 | TEXT & HEADINGS
 ---------------------------------------------------------------------------*/
-export const headingHero = "text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight";
-export const headingLg = "text-2xl font-semibold";
-export const headingMd = "text-xl font-medium";
-export const headingSm = "text-lg font-medium";
+export const headingHero = "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight";
+export const headingLg = "text-xl sm:text-2xl font-semibold";
+export const headingMd = "text-lg sm:text-xl font-medium";
+export const headingSm = "text-base sm:text-lg font-medium";
 
 export const textPrimary = "text-foreground";        
 export const textSecondary = "text-muted-foreground";  
