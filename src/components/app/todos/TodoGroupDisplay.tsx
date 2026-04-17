@@ -21,8 +21,46 @@ export default function TodoGroupDisplay({
 }: TodoGroupDisplayProps) {
   if (isLoading) {
     return (
-      <div className="text-center py-12">
-        <p className={ui.textSecondary}>Loading your todo groups...</p>
+      <div className="space-y-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className={ui.headingHero}>Todos</h1>
+          <button
+            onClick={onCreate}
+            className={ui.btnCreate}
+            disabled
+          >
+            New Group
+          </button>
+        </div>
+
+        <section>
+          <h2 className={`${ui.headingSm} text-muted-foreground mb-4`}>
+            Groups
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className={`${ui.cardMd} w-full border-none bg-card/70 text-left shadow-sm animate-pulse flex flex-col p-4 rounded-lg`}
+              >
+                <div className="h-6 w-3/5 rounded bg-muted mb-3" />
+
+                <div className="mb-3 flex-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="h-4 w-1/3 rounded bg-muted" />
+                    <div className="h-4 w-1/4 rounded bg-muted" />
+                  </div>
+                  <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden" />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="h-4 w-2/5 rounded bg-muted" />
+                  <div className="h-8 w-12 rounded bg-muted" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     );
   }

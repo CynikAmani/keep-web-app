@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useTheme } from "@/providers/ThemeProvider";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useScrollDirection } from "@/hooks/ui/useScrollDirection";
-import { btnGhostSm, btnOutlineSm, badgeBrand, textBrand } from "@/config/uiClasses";
+import { btnGhostSm, btnOutlineSm, badgeBrand, textBrand, btnDestructiveSm, btnDestructiveOutlineSm } from "@/config/uiClasses";
 
 export function TopBar() {
   const { theme, toggleTheme } = useTheme();
@@ -29,7 +29,7 @@ export function TopBar() {
             <span className="text-sm">{theme === "dark" ? "Light" : "Dark"}</span>
           </button>
           
-          <button onClick={() => logout()} className={`${btnGhostSm} text-destructive gap-2`}>
+          <button onClick={() => logout()} className={`${btnDestructiveOutlineSm} text-destructive gap-2`}>
             <LogOut size={18} />
             <span className="hidden sm:inline">Logout</span>
           </button>
