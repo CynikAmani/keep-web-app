@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import NoteManager from "@/components/app/notes/NoteManager";
+import NoteManager from "@/features/notes/components/NoteManager";
 
 export default function NotesPage() {
   return (

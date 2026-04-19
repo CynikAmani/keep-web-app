@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import TodosManager from "@/components/app/todos/TodosManager";
+import TodosManager from "@/features/todos/components/TodosManager";
 
 export default function TodosPage() {
   return (
