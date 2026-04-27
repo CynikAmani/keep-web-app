@@ -87,7 +87,7 @@ export function RoleManager() {
             ))
           ) : roles.length === 0 ? (
             // Cool empty fallback component
-            <div className="text-center py-20 border-2 border-dashed border-border rounded-3xl bg-gradient-to-br from-card via-card to-secondary/20">
+            <div className="text-center py-20 border-2 border-dashed border-border rounded-3xl bg-linear-to-br from-card via-card to-secondary/20">
               <div className="max-w-md mx-auto">
                 <div className="w-20 h-20 bg-muted rounded-2xl mx-auto mb-6 flex items-center justify-center">
                   <ShieldCheck size={40} className="text-muted-foreground/50" />
