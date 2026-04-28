@@ -37,7 +37,7 @@ export function useRoleActions() {
       store.setRoles(updatedRoles);
       
       // Clear the session after successful save
-      store.clearSelection();
+      store.resetDraftState();
     } catch (err) {
       store.setError("Failed to update permissions");
     } finally {

@@ -15,7 +15,8 @@ export function RoleManager() {
     roles, 
     availablePermissions, 
     activeRole, 
-    clearSelection, 
+    clearSelection,
+    resetDraftState,
     isLoading,
     isPermissionsLoading,
     startEditing,
@@ -125,7 +126,7 @@ export function RoleManager() {
         <div className="flex flex-col sm:hidden p-4 gap-4">
           <div className="flex items-center justify-between">
             <button 
-              onClick={clearSelection} 
+              onClick={resetDraftState} 
               className="p-2 hover:bg-accent rounded-full transition-colors"
             >
               <ArrowLeft size={18} />
@@ -149,7 +150,7 @@ export function RoleManager() {
           
           <div className="flex gap-2">
             <button 
-              onClick={clearSelection} 
+              onClick={resetDraftState} 
               className={ui.btnGhostMd + " flex-1 text-xs py-2"}
               disabled={isLoading}
             >
@@ -170,7 +171,7 @@ export function RoleManager() {
         <div className="hidden sm:flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
             <button 
-              onClick={clearSelection} 
+              onClick={resetDraftState} 
               className="p-2 hover:bg-accent rounded-full transition-colors"
             >
               <ArrowLeft size={20} />
@@ -191,7 +192,7 @@ export function RoleManager() {
           
           <div className="flex items-center gap-3">
             <button 
-              onClick={clearSelection} 
+              onClick={resetDraftState} 
               className={ui.btnGhostMd}
               disabled={isLoading}
             >
