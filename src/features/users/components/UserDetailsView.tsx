@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useUserStore } from "../store/user.store";
 import { useUserActions } from "../hooks/useUserActions";
-import { getStatusBadgeProps, formatUserRoles } from "../utils/userHelpers";
+import { getStatusBadgeProps } from "../utils/userHelpers";
 import { dateFormatter } from "@/utils/dateFormatter";
 import * as ui from "@/config/uiClasses";
 import { X, Mail, Calendar, ShieldCheck, User as UserIcon, Key, FileText, CheckSquare, Tag, Settings } from "lucide-react";
@@ -15,16 +15,30 @@ interface UserDetailsViewProps {
   userId?: number;
 }
 
-// Helper function to categorize permissions
-const categorizePermissions = (permissions: string[] | undefined) => {
-  if (!permissions || permissions.length === 0) return {};
+// Type definition for permission categories
+interface PermissionCategory {
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  label: string;
+  permissions: string[];
+}
 
-  const categories = {
-    notes: { icon: FileText, label: 'Notes', permissions: [] as string[] },
-    todos: { icon: CheckSquare, label: 'Todo Lists', permissions: [] as string[] },
-    labels: { icon: Tag, label: 'Labels', permissions: [] as string[] },
-    system: { icon: Settings, label: 'System', permissions: [] as string[] }
+interface PermissionCategories {
+  notes: PermissionCategory;
+  todos: PermissionCategory;
+  labels: PermissionCategory;
+  system: PermissionCategory;
+}
+
+// Helper function to categorize permissions
+const categorizePermissions = (permissions: string[] | undefined): PermissionCategories => {
+  const categories: PermissionCategories = {
+    notes: { icon: FileText, label: 'Notes', permissions: [] },
+    todos: { icon: CheckSquare, label: 'Todo Lists', permissions: [] },
+    labels: { icon: Tag, label: 'Labels', permissions: [] },
+    system: { icon: Settings, label: 'System', permissions: [] }
   };
+
+  if (!permissions || permissions.length === 0) return categories;
 
   permissions.forEach(permission => {
     if (permission.includes('note')) {
@@ -103,15 +117,11 @@ export function UserDetailsView({ isOpen, onClose, userId }: UserDetailsViewProp
                   <span className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Assigned Roles</span>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {selectedUser.roles?.length ? (
-                      selectedUser.roles.map((role, index) => {
-                        const roleText = typeof role === 'string' ? role : role.name;
-                        const roleKey = typeof role === 'string' ? role : role.id || index;
-                        return (
-                          <span key={roleKey} className={ui.badgeBrand + " border border-brand/20"}>
-                            {roleText}
-                          </span>
-                        );
-                      })
+                      selectedUser.roles.map((role, index) => (
+                        <span key={index} className={ui.badgeBrand + " border border-brand/20"}>
+                          {role}
+                        </span>
+                      ))
                     ) : (
                       <span className="text-sm text-muted-foreground italic">No roles assigned</span>
                     )}
@@ -126,29 +136,30 @@ export function UserDetailsView({ isOpen, onClose, userId }: UserDetailsViewProp
                   <span className="text-xs font-bold uppercase text-muted-foreground tracking-wider">System Permissions</span>
                   {selectedUser.permissions?.length ? (
                     <div className="mt-3 space-y-3">
-                      {Object.entries(categorizePermissions(selectedUser.permissions)).map(([categoryKey, category]) => {
-                        if (category.permissions.length === 0) return null;
-                        const Icon = category.icon;
-                        return (
-                          <div key={categoryKey} className="bg-muted/30 rounded-lg p-3 border border-border/50">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Icon size={14} className="text-muted-foreground" />
-                              <span className="text-xs font-semibold text-muted-foreground">{category.label}</span>
-                              <span className="text-xs text-muted-foreground">({category.permissions.length})</span>
+                      {Object.entries(categorizePermissions(selectedUser.permissions))
+                        .filter(([_, category]) => category.permissions.length > 0)
+                        .map(([categoryKey, category]) => {
+                          const Icon = category.icon;
+                          return (
+                            <div key={categoryKey} className="bg-muted/30 rounded-lg p-3 border border-border/50">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Icon size={14} className="text-muted-foreground" />
+                                <span className="text-xs font-semibold text-muted-foreground">{category.label}</span>
+                                <span className="text-xs text-muted-foreground">({category.permissions.length})</span>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {category.permissions.map((permission: string) => (
+                                  <span 
+                                    key={permission} 
+                                    className="text-xs px-2 py-1 bg-background border border-border/50 rounded-md text-muted-foreground hover:text-foreground transition-colors"
+                                  >
+                                    {permission.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
-                            <div className="flex flex-wrap gap-1">
-                              {category.permissions.map(permission => (
-                                <span 
-                                  key={permission} 
-                                  className="text-xs px-2 py-1 bg-background border border-border/50 rounded-md text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                  {permission.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                     </div>
                   ) : (
                     <div className="mt-2 text-sm text-muted-foreground italic">
