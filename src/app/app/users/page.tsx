@@ -1,12 +1,7 @@
-'use client'
-
-import ComingSoon from "@/components/temp/ComingSoon";
+import { UserManager } from "@/features/users/components/UserManager";
 
 export default function UsersPage() {
     return (
-        <ComingSoon
-            title="Users Coming Soon"
-            description="We're working hard to bring you a comprehensive users page. Stay tuned for updates!"
-        />
+        <UserManager />
     );
 }

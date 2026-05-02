@@ -3,7 +3,8 @@
 import { TopBar } from "./TopBar";
 import { Sidebar } from "./Sidebar";
 import { MobileNav } from "./MobileNav"; // New
-import { Footer } from "./Footer"; 
+import { Footer } from "./Footer";
+import { Toaster } from "sonner"; 
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -22,6 +23,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       <MobileNav />
+      <Toaster />
     </div>
   );
 }
