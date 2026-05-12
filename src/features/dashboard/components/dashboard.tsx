@@ -115,6 +115,8 @@ export default function Dashboard() {
                   await noteService.archive(noteId);
                   closeEditor();
                   await refreshAfterEdit();
+                  // Redirect to archives page
+                  window.location.href = "/app/archives?tab=notes";
                 } catch (err) {
                   console.error("Failed to archive note:", err);
                   throw err;
@@ -187,6 +189,8 @@ export default function Dashboard() {
                   await todosService.archiveTodoGroup(groupId);
                   handleTodoEditorClose();
                   await refreshAfterEdit();
+                  // Redirect to archives page
+                  window.location.href = "/app/archives?tab=todos";
                 } catch (err) {
                   console.error("Failed to archive todo group:", err);
                   throw err;

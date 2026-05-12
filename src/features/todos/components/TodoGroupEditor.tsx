@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Pin, PinOff, Archive, Trash2, Save, Check, Loader2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Pin, PinOff, Archive, ArchiveRestore, Trash2, Save, Check, Loader2, MoreHorizontal } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { TodoGroup, CreateTodoGroupPayload, UpdateTodoGroupPayload, TodoItem } from "@/features/todos/types/todos.types";
 import * as ui from "@/config/uiClasses";
 import { PERMISSIONS } from "@/config/permissions.config";
@@ -22,6 +30,7 @@ interface TodoGroupEditorProps {
   ) => Promise<void>;
   onDelete?: (groupId: number) => Promise<void>;
   onArchive?: (groupId: number) => Promise<void>;
+  onUnarchive?: (groupId: number) => Promise<void>;
   onTogglePin?: (groupId: number) => Promise<void>;
 }
 
@@ -39,6 +48,7 @@ export default function TodoGroupEditor({
   onSave,
   onDelete,
   onArchive,
+  onUnarchive,
   onTogglePin,
 }: TodoGroupEditorProps) {
   const { formData, error, validateForm, updateField } =
@@ -51,8 +61,28 @@ export default function TodoGroupEditor({
   const [isArchiving, setIsArchiving] = useState(false);
   const [isPinning, setIsPinning] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const isEditMode = !!initialData;
   const isAnyActionLoading = isSaving || isDeleting || isArchiving || isPinning;
+
+  // Refs for auto-focus
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const todoItemInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus logic
+  useEffect(() => {
+    if (isEditMode) {
+      // For existing groups: check if title is empty, otherwise focus on todo item input
+      if (!formData.title?.trim()) {
+        titleInputRef.current?.focus();
+      } else {
+        todoItemInputRef.current?.focus();
+      }
+    } else {
+      // For new groups: always focus on title
+      titleInputRef.current?.focus();
+    }
+  }, [isEditMode, formData.title]);
 
   useEffect(() => {
     if (initialItems && initialItems.length > 0) {
@@ -117,12 +147,10 @@ export default function TodoGroupEditor({
 
   const handleDelete = async () => {
     if (!initialData || !onDelete) return;
-    if (!confirm(`Delete "${initialData.title}"? This action cannot be undone.`)) {
-      return;
-    }
     setIsDeleting(true);
     try {
       await onDelete(initialData.id);
+      setShowDeleteDialog(false);
     } catch (err) {
       console.error("Delete failed:", err);
       setSaveError(err instanceof Error ? err.message : "Failed to delete group");
@@ -131,13 +159,17 @@ export default function TodoGroupEditor({
   };
 
   const handleArchive = async () => {
-    if (!initialData || !onArchive) return;
+    if (!initialData) return;
     setIsArchiving(true);
     try {
-      await onArchive(initialData.id);
+      if (initialData.is_archived && onUnarchive) {
+        await onUnarchive(initialData.id);
+      } else if (!initialData.is_archived && onArchive) {
+        await onArchive(initialData.id);
+      }
     } catch (err) {
-      console.error("Archive failed:", err);
-      setSaveError(err instanceof Error ? err.message : "Failed to archive group");
+      console.error("Archive/Unarchive failed:", err);
+      setSaveError(err instanceof Error ? err.message : "Failed to toggle archive status");
       setIsArchiving(false);
     }
   };
@@ -161,6 +193,7 @@ export default function TodoGroupEditor({
           updateField={(field: string, value: any) => {
             updateField(field as any, value);
           }}
+          titleInputRef={titleInputRef}
         />
 
         <TodoGroupEditorItemInput
@@ -168,6 +201,7 @@ export default function TodoGroupEditor({
           onChange={setNewItemInput}
           onAdd={handleAddItem}
           isSaving={isAnyActionLoading}
+          inputRef={todoItemInputRef}
         />
       </form>
 
@@ -210,22 +244,41 @@ export default function TodoGroupEditor({
                 onClick={handleArchive}
                 disabled={isAnyActionLoading}
                 type="button"
-                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-accent`}
-                title={initialData?.is_archived ? "Restore group" : "Archive group"}
+                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-accent ${
+                  initialData?.is_archived ? "bg-green-10 text-green-600" : ""
+                }`}
+                title={initialData?.is_archived ? "Unarchive group" : "Archive group"}
               >
-                <Archive size={20} strokeWidth={2} />
+                {initialData?.is_archived ? (
+                  <ArchiveRestore size={20} strokeWidth={2} />
+                ) : (
+                  <Archive size={20} strokeWidth={2} />
+                )}
               </button>
 
-              {/* Delete */}
-              <button
-                onClick={handleDelete}
-                disabled={isAnyActionLoading}
-                type="button"
-                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-destructive/10 text-destructive`}
-                title="Delete group"
-              >
-                <Trash2 size={20} strokeWidth={2} />
-              </button>
+              {/* More Options Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    disabled={isAnyActionLoading}
+                    type="button"
+                    className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-accent`}
+                    title="More options"
+                  >
+                    <MoreHorizontal size={20} strokeWidth={2} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => setShowDeleteDialog(true)}
+                    disabled={isAnyActionLoading}
+                  >
+                    <Trash2 size={16} strokeWidth={2} className="mr-2" />
+                    Delete Group
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </div>
@@ -267,6 +320,21 @@ export default function TodoGroupEditor({
           </button>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {initialData && (
+        <ConfirmDialog
+          open={showDeleteDialog}
+          onOpenChange={setShowDeleteDialog}
+          title="Delete Todo Group"
+          description={`Are you sure you want to delete "${initialData.title}"? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          onConfirm={handleDelete}
+          isConfirming={isDeleting}
+          variant="destructive"
+        />
+      )}
     </div>
   );
 }

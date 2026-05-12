@@ -28,6 +28,8 @@ const themeScript = `
 })();
 `
 
+import { Toaster } from "@/components/ui/toaster"
+
 export default function RootLayout({
   children,
 }: {
@@ -47,6 +49,7 @@ export default function RootLayout({
         <ThemeProvider>
           {children}
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   )

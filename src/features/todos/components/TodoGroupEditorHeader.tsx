@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef } from "react";
 import * as ui from "@/config/uiClasses";
 import { useTodoGroupEditor } from "@/features/todos/hooks/useTodoGroupEditor";
 
@@ -8,18 +9,22 @@ interface TodoGroupEditorHeaderProps {
   updateField: (field: string, value: any) => void;
   error?: string | null;
   isSaving?: boolean;
+  titleInputRef?: React.RefObject<HTMLInputElement>;
 }
 
-export default function TodoGroupEditorHeader({
-  formData,
-  updateField,
-  error,
-  isSaving,
-}: TodoGroupEditorHeaderProps) {
+const TodoGroupEditorHeader = forwardRef<HTMLInputElement | null, TodoGroupEditorHeaderProps>(
+  function TodoGroupEditorHeader({
+    formData,
+    updateField,
+    error,
+    isSaving,
+    titleInputRef,
+  }: TodoGroupEditorHeaderProps, ref) {
   return (
     <div className="flex flex-col gap-3 shrink-0">
       {/* Title Input */}
       <input
+        ref={titleInputRef || ref}
         type="text"
         placeholder="Title"
         value={formData.title}
@@ -39,4 +44,7 @@ export default function TodoGroupEditorHeader({
       ) : null}
     </div>
   );
-}
+  }
+);
+
+export default TodoGroupEditorHeader;

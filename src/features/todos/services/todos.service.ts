@@ -11,124 +11,180 @@ import {
 
 class TodosService {
   private unwrapResponse = <T>(payload: T | { data: T }): T => {
-    if (payload && typeof payload === "object" && "data" in payload) {
-      return payload.data;
+    try {
+      if (payload && typeof payload === "object" && "data" in payload) {
+        return payload.data;
+      }
+      return payload;
+    } catch (error) {
+      throw error;
     }
-    return payload;
   };
 
-  // --- TodoGroup Operations ---
-  // Returns all TodoGroups with their todo_items eager-loaded
   async getTodoGroups(): Promise<TodoGroup[]> {
-    const { data } = await api.get("/todo-groups");
-    return this.unwrapResponse<TodoGroup[]>(data);
+    try {
+      const { data } = await api.get("/todo-groups");
+      return this.unwrapResponse<TodoGroup[]>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Returns a single TodoGroup with its todo_items eager-loaded
   async getTodoGroup(id: number): Promise<TodoGroup> {
-    const { data } = await api.get(`/todo-groups/${id}`);
-    return this.unwrapResponse<TodoGroup>(data);
+    try {
+      const { data } = await api.get(`/todo-groups/${id}`);
+      return this.unwrapResponse<TodoGroup>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Create a new TodoGroup. If todo_items provided, they are created atomically.
-  // Response includes the created items within todo_items array.
   async createTodoGroup(payload: CreateTodoGroupPayload): Promise<TodoGroup> {
-    const { data } = await api.post("/todo-groups", payload);
-    return this.unwrapResponse<TodoGroup>(data);
+    try {
+      const { data } = await api.post("/todo-groups", payload);
+      return this.unwrapResponse<TodoGroup>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Update TodoGroup fields (title, color, label_id, is_pinned)
-  // Response includes all todo_items within the group
   async updateTodoGroup(
     id: number,
     payload: UpdateTodoGroupPayload
   ): Promise<TodoGroup> {
-    const { data } = await api.put(`/todo-groups/${id}`, payload);
-    return this.unwrapResponse<TodoGroup>(data);
+    try {
+      const { data } = await api.put(`/todo-groups/${id}`, payload);
+      return this.unwrapResponse<TodoGroup>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Delete a TodoGroup (and its items)
   async deleteTodoGroup(id: number): Promise<void> {
-    await api.delete(`/todo-groups/${id}`);
+    try {
+      await api.delete(`/todo-groups/${id}`);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Archive a TodoGroup
-  // Response includes all todo_items within the group
   async archiveTodoGroup(id: number): Promise<TodoGroup> {
-    const { data } = await api.patch(`/todo-groups/${id}/archive`);
-    return this.unwrapResponse<TodoGroup>(data);
+    try {
+      const { data } = await api.patch(`/todo-groups/${id}/archive`);
+      return this.unwrapResponse<TodoGroup>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Toggle pin state of a TodoGroup
-  // Response includes all todo_items within the group
   async togglePinTodoGroup(id: number): Promise<TodoGroup> {
-    const { data } = await api.patch(`/todo-groups/${id}/toggle-pin`);
-    return this.unwrapResponse<TodoGroup>(data);
+    try {
+      const { data } = await api.patch(`/todo-groups/${id}/toggle-pin`);
+      return this.unwrapResponse<TodoGroup>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // --- TodoItem Operations (Single) ---
-  // Create a single TodoItem. Must include todo_group_id.
+  async getArchivedTodoGroups(): Promise<TodoGroup[]> {
+    try {
+      const { data } = await api.get('/todo-groups/archived');
+      return this.unwrapResponse<TodoGroup[]>(data);
+    } catch (error) {
+      console.log('Error fetching archived todo groups:', error);
+      throw error;
+    }
+  }
+
+  async unarchiveTodoGroup(id: number): Promise<TodoGroup> {
+    try {
+      const { data } = await api.patch(`/todo-groups/${id}/unarchive`);
+      return this.unwrapResponse<TodoGroup>(data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async createTodoItem(payload: TodoItemPayload): Promise<TodoItem> {
-    const { data } = await api.post("/todo-items", payload);
-    return this.unwrapResponse<TodoItem>(data);
+    try {
+      const { data } = await api.post("/todo-items", payload);
+      return this.unwrapResponse<TodoItem>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Update a single TodoItem (task or is_completed)
   async updateTodoItem(
     id: number,
     payload: Partial<TodoItemPayload>
   ): Promise<TodoItem> {
-    const { data } = await api.patch(`/todo-items/${id}`, payload);
-    return this.unwrapResponse<TodoItem>(data);
+    try {
+      const { data } = await api.patch(`/todo-items/${id}`, payload);
+      return this.unwrapResponse<TodoItem>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Delete a single TodoItem
   async deleteTodoItem(id: number): Promise<void> {
-    await api.delete(`/todo-items/${id}`);
+    try {
+      await api.delete(`/todo-items/${id}`);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Toggle completion status of a TodoItem
   async toggleTodoItemCompletion(id: number): Promise<TodoItem> {
-    const { data } = await api.patch(`/todo-items/${id}/toggle`);
-    return this.unwrapResponse<TodoItem>(data);
+    try {
+      const { data } = await api.patch(`/todo-items/${id}/toggle`);
+      return this.unwrapResponse<TodoItem>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Update position of a TodoItem (for drag-and-drop ordering)
   async updateTodoItemPosition(
     id: number,
     position: number
   ): Promise<TodoItem> {
-    const { data } = await api.patch(`/todo-items/${id}/position`, {
-      position,
-    });
-    return this.unwrapResponse<TodoItem>(data);
+    try {
+      const { data } = await api.patch(`/todo-items/${id}/position`, {
+        position,
+      });
+      return this.unwrapResponse<TodoItem>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // --- Batch TodoItem Operations ---
-  // Batch create multiple TodoItems in a group
-  // Returns full TodoGroup with all items (including newly created)
   async batchCreateTodoItems(
     groupId: number,
     items: BatchCreateTodoItemPayload[]
   ): Promise<TodoGroup> {
-    const { data } = await api.post(`/todo-groups/${groupId}/items/batch`, {
-      todo_items: items,
-    });
-    return this.unwrapResponse<TodoGroup>(data);
+    try {
+      const { data } = await api.post(`/todo-groups/${groupId}/items/batch`, {
+        todo_items: items,
+      });
+      return this.unwrapResponse<TodoGroup>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Batch update and delete TodoItems in a group
-  // Returns full TodoGroup with all items after updates/deletions applied
   async batchUpdateTodoItems(
     groupId: number,
     updateItems: BatchUpdateTodoItemPayload[] = [],
     deleteItemIds: number[] = []
   ): Promise<TodoGroup> {
-    const { data } = await api.patch(`/todo-groups/${groupId}/items/batch`, {
-      update_items: updateItems,
-      delete_item_ids: deleteItemIds,
-    });
-    return this.unwrapResponse<TodoGroup>(data);
+    try {
+      const { data } = await api.patch(`/todo-groups/${groupId}/items/batch`, {
+        update_items: updateItems,
+        delete_item_ids: deleteItemIds,
+      });
+      return this.unwrapResponse<TodoGroup>(data);
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

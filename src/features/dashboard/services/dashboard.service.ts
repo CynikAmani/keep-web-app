@@ -2,10 +2,14 @@ import api from "@/lib/axios";
 import { DashboardData } from "@/features/dashboard/types/dashboard.types";
 
 const unwrapResponse = <T>(payload: T | { data: T }): T => {
-  if (payload && typeof payload === "object" && "data" in payload) {
-    return payload.data;
+  try {
+    if (payload && typeof payload === "object" && "data" in payload) {
+      return payload.data;
+    }
+    return payload;
+  } catch (error) {
+    throw error;
   }
-  return payload;
 };
 
 export const dashboardService = {
@@ -14,7 +18,11 @@ export const dashboardService = {
    * Efficiency: One call to rule them all.
    */
   getDashboardData: async (limit: number = 3): Promise<DashboardData> => {
-    const { data } = await api.get("/dashboard", { params: { limit } });
-    return unwrapResponse<DashboardData>(data);
+    try {
+      const { data } = await api.get("/dashboard", { params: { limit } });
+      return unwrapResponse<DashboardData>(data);
+    } catch (error) {
+      throw error;
+    }
   },
 };

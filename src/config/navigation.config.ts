@@ -6,7 +6,9 @@ import {
   Users,
   PlusCircle,
   LucideIcon,
-  Shield
+  Shield,
+  UserCircle,
+  Archive
 } from "lucide-react";
 
 export type AllowedRoles = "*" | string[];
@@ -77,6 +79,20 @@ export const APP_NAVIGATION: NavItem[] = [
     mobileLabel: "Roles", 
     icon: Shield, 
     allowedRoles: ["admin", "super-admin"] 
+  },
+  { 
+    href: "/app/account", 
+    label: "Account", 
+    mobileLabel: "Account", 
+    icon: UserCircle, 
+    allowedRoles: "*" 
+  },
+  { 
+    href: "/app/archives", 
+    label: "Archives", 
+    mobileLabel: "Archives", 
+    icon: Archive,
+    allowedRoles: "*",
   },
   { 
     href: "/app/settings", 

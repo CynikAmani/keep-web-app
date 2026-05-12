@@ -8,6 +8,7 @@ interface TodoGroupEditorItemInputProps {
   onChange: (value: string) => void;
   onAdd: () => void;
   isSaving?: boolean;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }
 
 export default function TodoGroupEditorItemInput({
@@ -15,10 +16,12 @@ export default function TodoGroupEditorItemInput({
   onChange,
   onAdd,
   isSaving,
+  inputRef,
 }: TodoGroupEditorItemInputProps) {
   return (
     <div className="flex gap-2">
       <input
+        ref={inputRef}
         type="text"
         placeholder="Add item..."
         value={value}

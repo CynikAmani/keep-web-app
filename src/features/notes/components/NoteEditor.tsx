@@ -1,19 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { Pin, PinOff, Archive, Trash2, Save, Check, Loader2 } from "lucide-react";
+import { Pin, PinOff, Archive, ArchiveRestore, Trash2, Save, Check, Loader2, MoreHorizontal } from "lucide-react";
 import * as ui from "@/config/uiClasses";
 import { PERMISSIONS } from "@/config/permissions.config";
 import { useNoteEditor } from "@/features/notes/hooks/useNoteEditor";
 import { noteService } from "@/features/notes/services/note.service";
 import { Note } from "@/features/notes/types/note.types";
 import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface NoteEditorProps {
   initialData: Note | null;
   onClose: () => void;
   onSave: (note?: Note) => void;
   onArchive?: (noteId: number) => Promise<void>;
+  onUnarchive?: (noteId: number) => Promise<void>;
   onDelete?: (noteId: number) => Promise<void>;
   onTogglePin?: (noteId: number) => Promise<void>;
 }
@@ -23,6 +31,7 @@ export default function NoteEditor({
   onClose,
   onSave,
   onArchive,
+  onUnarchive,
   onDelete,
   onTogglePin,
 }: NoteEditorProps) {
@@ -30,6 +39,7 @@ export default function NoteEditor({
   const [isDeleting, setIsDeleting] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
   const [isPinning, setIsPinning] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const isEditMode = Boolean(initialData?.id);
   const isAnyActionLoading = loading || isDeleting || isArchiving || isPinning;
 
@@ -47,13 +57,17 @@ export default function NoteEditor({
   };
 
   const handleArchive = async () => {
-    if (!initialData?.id || !onArchive) return;
+    if (!initialData?.id) return;
     setIsArchiving(true);
     try {
-      await onArchive(initialData.id);
+      if (initialData.is_archived && onUnarchive) {
+        await onUnarchive(initialData.id);
+      } else if (!initialData.is_archived && onArchive) {
+        await onArchive(initialData.id);
+      }
     } catch (err) {
-      console.error("Archive failed:", err);
-      toast.error("Failed to archive note");
+      console.error("Archive/Unarchive failed:", err);
+      toast.error("Failed to toggle archive status");
     } finally {
       setIsArchiving(false);
     }
@@ -61,12 +75,10 @@ export default function NoteEditor({
 
   const handleDelete = async () => {
     if (!initialData?.id || !onDelete) return;
-    if (!confirm(`Delete "${initialData.title || "Untitled"}"? This action cannot be undone.`)) {
-      return;
-    }
     setIsDeleting(true);
     try {
       await onDelete(initialData.id);
+      setShowDeleteDialog(false);
     } catch (err) {
       console.error("Delete failed:", err);
       toast.error("Failed to delete note");
@@ -132,22 +144,41 @@ export default function NoteEditor({
                 onClick={handleArchive}
                 disabled={isAnyActionLoading}
                 type="button"
-                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-accent`}
-                title={initialData?.is_archived ? "Restore note" : "Archive note"}
+                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-accent ${
+                  initialData?.is_archived ? "bg-green-10 text-green-600" : ""
+                }`}
+                title={initialData?.is_archived ? "Unarchive note" : "Archive note"}
               >
-                <Archive size={20} strokeWidth={2} />
+                {initialData?.is_archived ? (
+                  <ArchiveRestore size={20} strokeWidth={2} />
+                ) : (
+                  <Archive size={20} strokeWidth={2} />
+                )}
               </button>
 
-              {/* Delete */}
-              <button
-                onClick={handleDelete}
-                disabled={isAnyActionLoading}
-                type="button"
-                className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-destructive/10 text-destructive`}
-                title="Delete note"
-              >
-                <Trash2 size={20} strokeWidth={2} />
-              </button>
+              {/* More Options Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    disabled={isAnyActionLoading}
+                    type="button"
+                    className={`${ui.btnGhostSm} p-2.5 rounded-full transition-colors hover:bg-accent`}
+                    title="More options"
+                  >
+                    <MoreHorizontal size={20} strokeWidth={2} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => setShowDeleteDialog(true)}
+                    disabled={isAnyActionLoading}
+                  >
+                    <Trash2 size={16} strokeWidth={2} className="mr-2" />
+                    Delete Note
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </div>
@@ -189,6 +220,21 @@ export default function NoteEditor({
           </button>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {initialData && (
+        <ConfirmDialog
+          open={showDeleteDialog}
+          onOpenChange={setShowDeleteDialog}
+          title="Delete Note"
+          description={`Are you sure you want to delete "${initialData.title || 'Untitled'}"? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          onConfirm={handleDelete}
+          isConfirming={isDeleting}
+          variant="destructive"
+        />
+      )}
     </div>
   );
 }
