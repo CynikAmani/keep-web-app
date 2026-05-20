@@ -10,7 +10,10 @@ export class AuthService {
     try {
       res = await api.post<AuthResourceResponse>("/auth/signin", payload);
     } catch (error: unknown) {
+      
       if (axios.isAxiosError(error)) {
+        console.log(error.response?.data);
+        
         throw new Error(error.response?.data?.message || "Authentication failed");
       }
       throw error;
@@ -30,6 +33,7 @@ export class AuthService {
     try {
       res = await api.post<AuthResourceResponse>("/auth/signup", payload);
     } catch (error: unknown) {
+      console.log(error);
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Registration failed");
       }
