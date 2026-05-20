@@ -4,7 +4,10 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/auth/useAuth"
 import { useAuthModal } from "@/hooks/auth/useAuthModal"
+import { usePasswordStrength } from "@/hooks/auth/usePasswordStrength"
 import { Label } from "@/components/ui/label"
+import { PasswordInput } from "@/components/ui/password-input"
+import { PasswordStrengthIndicator } from "@/components/ui/password-strength-indicator"
 import { 
   btnBrandMd, 
   textBrand, 
@@ -24,6 +27,7 @@ export function SignUpForm() {
   
   const { signup } = useAuth()
   const { closeModal, openModal } = useAuthModal()
+  const passwordStrength = usePasswordStrength(password)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -97,26 +101,29 @@ export function SignUpForm() {
 
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <input
+        <PasswordInput
           id="password"
-          type="password"
-          className={input}
+          placeholder="Create a password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           required
           disabled={isLoading}
+        />
+        <PasswordStrengthIndicator
+          strength={passwordStrength.strength}
+          score={passwordStrength.score}
+          feedback={passwordStrength.feedback}
         />
         <p className={`text-xs ${textSecondary}`}>Must be at least 6 characters</p>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="confirmPassword">Confirm Password</Label>
-        <input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
-          className={input}
+          placeholder="Confirm your password"
           value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          onChange={setConfirmPassword}
           required
           disabled={isLoading}
         />

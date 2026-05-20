@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/auth/useAuth"
 import { useAuthModal } from "@/hooks/auth/useAuthModal"
 import { Label } from "@/components/ui/label"
+import { PasswordInput } from "@/components/ui/password-input"
 import { 
   btnBrandMd, 
   textBrand, 
@@ -68,12 +69,11 @@ export function SignInForm() {
 
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <input
+        <PasswordInput
           id="password"
-          type="password"
-          className={input}
+          placeholder="Enter your password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           required
           disabled={isLoading}
         />
