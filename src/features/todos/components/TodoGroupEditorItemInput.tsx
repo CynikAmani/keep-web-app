@@ -8,7 +8,7 @@ interface TodoGroupEditorItemInputProps {
   onChange: (value: string) => void;
   onAdd: () => void;
   isSaving?: boolean;
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 export default function TodoGroupEditorItemInput({

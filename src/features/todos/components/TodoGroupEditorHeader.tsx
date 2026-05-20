@@ -9,7 +9,7 @@ interface TodoGroupEditorHeaderProps {
   updateField: (field: string, value: any) => void;
   error?: string | null;
   isSaving?: boolean;
-  titleInputRef?: React.RefObject<HTMLInputElement>;
+  titleInputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 const TodoGroupEditorHeader = forwardRef<HTMLInputElement | null, TodoGroupEditorHeaderProps>(
