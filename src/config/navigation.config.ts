@@ -28,6 +28,7 @@ export interface NavItem {
   icon: LucideIcon;
   allowedRoles: AllowedRoles;
   dashboardShortcut?: DashboardShortcut;
+  showInMain?: boolean;
 }
 
 export const APP_NAVIGATION: NavItem[] = [
@@ -36,7 +37,8 @@ export const APP_NAVIGATION: NavItem[] = [
     label: "Dashboard", 
     mobileLabel: "Home", 
     icon: Home,
-    allowedRoles: "*" 
+    allowedRoles: "*",
+    showInMain: true 
   },
   { 
     href: "/app/notes", 
@@ -44,6 +46,7 @@ export const APP_NAVIGATION: NavItem[] = [
     mobileLabel: "Notes", 
     icon: FileText,
     allowedRoles: "*",
+    showInMain: true,
     dashboardShortcut: {
       title: "New Note",
       description: "Capture a quick thought",
@@ -58,6 +61,7 @@ export const APP_NAVIGATION: NavItem[] = [
     mobileLabel: "Tasks", 
     icon: CheckSquare,
     allowedRoles: "*",
+    showInMain: true,
     dashboardShortcut: {
       title: "New Todo",
       description: "Check off your list",
@@ -71,21 +75,24 @@ export const APP_NAVIGATION: NavItem[] = [
     label: "Users", 
     mobileLabel: "Users", 
     icon: Users, 
-    allowedRoles: ["admin", "super-admin", "super-user"] 
+    allowedRoles: ["admin", "super-admin", "super-user"],
+    showInMain: false 
   },
   { 
     href: "/app/roles", 
     label: "Roles", 
     mobileLabel: "Roles", 
     icon: Shield, 
-    allowedRoles: ["admin", "super-admin"] 
+    allowedRoles: ["admin", "super-admin"],
+    showInMain: false 
   },
   { 
     href: "/app/account", 
     label: "Account", 
     mobileLabel: "Account", 
     icon: UserCircle, 
-    allowedRoles: "*" 
+    allowedRoles: "*",
+    showInMain: false 
   },
   { 
     href: "/app/archives", 
@@ -93,6 +100,7 @@ export const APP_NAVIGATION: NavItem[] = [
     mobileLabel: "Archives", 
     icon: Archive,
     allowedRoles: "*",
+    showInMain: false 
   },
   { 
     href: "/app/settings", 
@@ -100,6 +108,7 @@ export const APP_NAVIGATION: NavItem[] = [
     mobileLabel: "Settings", 
     icon: Settings,
     allowedRoles: "*",
+    showInMain: false,
     dashboardShortcut: {
       title: "Settings",
       description: "App preferences",
